@@ -50,7 +50,7 @@ namespace Assignment2_CT_Spring2020
 
             Console.WriteLine("Question 6");
             char[] arr = new char[] { 'a', 'g', 'h', 'a' };
-            int k = 3;
+            int k = 2;
             Console.WriteLine(ContainsDuplicate(arr, k));
 
             //Console.WriteLine("Question 7");
@@ -289,21 +289,35 @@ namespace Assignment2_CT_Spring2020
         {
             try
             {
-                bool flag = false; // initial output
-                Dictionary<int, int> DupDict = new Dictionary<int, int>(); // dictionary to store array values
+                bool flag = false;
+                Dictionary<int, int> DupDict = new Dictionary<int, int>();
                 for (int i = 0; i < arr.Length; i++)
                 {
-                    if (DupDict.ContainsKey(arr[i]) == false) // if a new value, store it
+                    if (DupDict.ContainsKey(arr[i]) == false) // if new character, add it as a key with a value of 1
                     {
                         DupDict.Add(arr[i], 0);
                     }
-                    else if (DupDict.ContainsKey(arr[i]) == true // else if a repeating value
-                        && i - DupDict[arr[i]] <= k) // AND difference between current and first instances are less than k
+                    else
                     {
-                        flag = true; // then output true
+                        if (i - DupDict[arr[i]] <= k)
+                            flag = true;
                     }
                 }
                 return flag;
+                //Dictionary<int, int> OutputDict = new Dictionary<int, int>();
+
+                //for (int j = 0; j < arr.Length; j++)
+                //{
+                //    if (DupDict.ContainsKey(arr[j]))
+                //        DupDict[arr[j]] += 1;
+                //    if (DupDict[arr[j]] > 1)
+                //        OutputDict.Add(arr[j], j);
+                //}
+
+                //foreach (KeyValuePair<int, int> kvp in OutputDict)
+                //    if (kvp.Value > 1)
+
+
             }
             catch (Exception)
             {
