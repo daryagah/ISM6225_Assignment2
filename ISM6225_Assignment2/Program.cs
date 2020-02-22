@@ -58,13 +58,16 @@ namespace Assignment2_CT_Spring2020
             //int priceProduct = GoldRod(rodLength);
             //Console.WriteLine(priceProduct);
 
-            //Console.WriteLine("Question 8");
-            //string[] userDict = new string[] { "rocky", "usf", "hello", "apple" };
-            //string keyword = "hhllo";
-            //Console.WriteLine(DictSearch(userDict, keyword));
-
-            //Console.WriteLine("Question 9");
-            //SolvePuzzle();
+            Console.WriteLine("Question 8");
+            // Create string array and string keyword to hold values for question 8
+            string[] userDict = new string[] { "rocky", "usf", "hello", "apple" };
+            string keyword = "hhllo";
+            // Write results for question 8
+            Console.WriteLine(DictSearch(userDict, keyword));
+            Console.WriteLine("Question 9");
+            // Call method for question 9
+            SolvePuzzle value = new SolvePuzzle();
+            value.Calculate();
 
             Console.ReadLine();
         }
@@ -327,31 +330,175 @@ namespace Assignment2_CT_Spring2020
         //}
 
 
-        //public static bool DictSearch(string[] userDict, string keyword)
-        //{
-        //    try
-        //    {
-        //        //Write Your Code Here
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //    return default;
-        //}
+        //Question 8
+        public static bool DictSearch(string[] userDict, string keyword)
+        {
+            try
+            {
+                // For each word in user dictionary array do:
+                for (int i = 0; i < userDict.Length; i++)
+                {
+                    // Set new variable n equal to 0
+                    int n = 0;
+                    // Create two lists of characters each for a word from dictionary and keyword
+                    List<char> wordsList = new List<char>();
+                    wordsList.AddRange(userDict[i]);
+                    List<char> keywordList = new List<char>();
+                    keywordList.AddRange(keyword);
+                    // If length of the keyword and word from the dictionary is not the same, continue
+                    if (wordsList.Count != keywordList.Count)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        // If length is the same, for eaach letter do:
+                        for (int k = 0; k < wordsList.Count; k++)
+                        {
+                            // If letters are not the same, increment variable n
+                            if (keywordList[k] != wordsList[k])
+                            {
+                                n++;
+                            }
+                            // If it is the last letters of words and increment n is equal to 1, return true
+                            if (k == (wordsList.Count - 1) && n == 1)
+                            {
+                                return true;
+                            }
+                            // If n is greater than 1, which means more than one letter change needed, break
+                            if (n > 1)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+                // By default, return false
+                return false;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        //Question 9
+        public class SolvePuzzle
+        {
+            // Create three new string variables to hold words for calculations
+            string input1, input2, output;
+            // Create dictionary with characters and integers
+            Dictionary<char, int> dict = new Dictionary<char, int>();
+            // Create list of characters for counting number of letters
+            List<char> lettercount = new List<char>();
+            // Create a delegate method
+            Func<int, int, int, bool> calc;
 
+            public SolvePuzzle()
+            {
+                // Assign values to string variables
+                input1 = "uber";
+                input2 = "cool";
+                output = "uncle";
+                // Create dictionary for each string variable
+                SetDict(input1);
+                SetDict(input2);
+                SetDict(output);
+                // Make sure that input1 and input2 are supposed to be summed up, and dictionaries are not empty
+                calc = (input1, input2, s) => input1 + input2 == s && dict[output[0]] != 0;
+            }
+            public void SetDict(string str)
+            {
+                // For each letter in a word, set up a dictionary
+                for (int i = 0; i < str.Length; i++)
+                {
+                    if (!dict.ContainsKey(str[i]))
+                    {
+                        dict.Add(str[i], -1);
+                        lettercount.Add(str[i]);
+                    }
+                }
+            }
 
-        //public static void SolvePuzzle()
-        //{
-        //    try
-        //    {
-        //        //Write Your Code Here
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
+            public void Calculate()
+            {
+                // Create hash set to hold unique values
+                HashSet<int> set = new HashSet<int>();
+                // If function Solve returns true, print results
+                if (Solve(0, set))
+                {
+                    PrintResults(input1);
+                    Console.WriteLine("+");
+                    PrintResults(input2);
+                    Console.WriteLine("=");
+                    PrintResults(output);
+                }
+                // If not, print that there are no combinations
+                else
+                {
+                    Console.WriteLine("No Possible Combinations Found");
+                }
+            }
 
-        //}
+            public bool Solve(int index, HashSet<int> set)
+            {
+                // Create boolean variable
+                bool found = false;
+                // If index value passed is equal to dictionary count
+                if (index == dict.Count)
+                {
+                    // Then call get value method for each variable, passing current version of the string variables
+                    int input1 = GetValue(this.input1);
+                    int input2 = GetValue(this.input2);
+                    int output = GetValue(this.output);
+                    // Return delegate method
+                    return calc(input1, input2, output);
+                }
+                char ch = lettercount[index];
+                // For each digit [0-9], assign value to each distinct letter
+                for (int n = 0; n < 10; n++)
+                {
+                    if (!set.Contains(n) && dict[ch] == -1)
+                    {
+                        dict[ch] = n;
+                        set.Add(n);
+                        found = Solve(index + 1, set);
+                        if (!found)
+                        {
+                            set.Remove(n);
+                            dict[ch] = -1;
+                        }
+                        else return found;
+                    }
+                }
+                return false;
+            }
+
+            public int GetValue(string str)
+            {
+                // Create new variables
+                int pow = 1;
+                int result = 0;
+                // Take all letters one by one and calculate total amount in integer for a specific string
+                for (int i = str.Length - 1; i >= 0; i--)
+                {
+                    result += dict[str[i]] * pow;
+                    pow *= 10;
+                }
+                return result;
+            }
+
+            public void PrintResults(string str)
+            {
+                // Create new variable
+                string result = string.Empty;
+                // For each letter in a string, put a digit into a specified position
+                for (int i = 0; i < str.Length; i++)
+                {
+                    result += dict[str[i]];
+                }
+                Console.WriteLine(str);
+                Console.WriteLine(result);
+            }
+        }
     }
 }
