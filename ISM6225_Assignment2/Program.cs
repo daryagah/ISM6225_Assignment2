@@ -53,10 +53,10 @@ namespace Assignment2_CT_Spring2020
             int k = 3;
             Console.WriteLine(ContainsDuplicate(arr, k));
 
-            //Console.WriteLine("Question 7");
-            //int rodLength = 4;
-            //int priceProduct = GoldRod(rodLength);
-            //Console.WriteLine(priceProduct);
+            Console.WriteLine("Question 7");
+            int rodLength = 4;
+            int priceProduct = GoldRod(rodLength);
+            Console.WriteLine(priceProduct);
 
             Console.WriteLine("Question 8");
             // Create string array and string keyword to hold values for question 8
@@ -316,18 +316,31 @@ namespace Assignment2_CT_Spring2020
         }
 
 
-        //public static int GoldRod(int rodLength)
-        //{
-        //    try
-        //    {
-        //        //Write Your Code Here
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //    return 0;
-        //}
+        public static int GoldRod(int rodLength)
+        {
+            try
+          {
+                if (rodLength <= 1)
+                    return 0;
+                else
+                {
+                    int Parts = rodLength;
+
+                    for (int i = 1; i <= rodLength; i++)
+                    {
+                        Parts = Math.Max(Parts, i * GoldRod(rodLength - i)); // returns rodlength and compares it to iteration of i * f(n-1)
+
+                    }
+
+
+                    return Parts;
+                }
+            catch (Exception)
+            {
+                throw;
+            }
+            return 0;
+        }
 
 
         //Question 8
